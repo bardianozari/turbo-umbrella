@@ -22,6 +22,7 @@
             flex-direction: column;
             text-align: center;
             padding: 20px;
+            overflow: hidden;
         }
 
         .container {
@@ -31,6 +32,7 @@
             border: 1px solid #30363d;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
         }
 
         h1 {
@@ -42,7 +44,6 @@
         p {
             color: #8b949e;
             font-size: 1.1rem;
-            margin-bottom: 30px;
             line-height: 1.6;
         }
 
@@ -61,21 +62,26 @@
             100% { transform: rotate(360deg); }
         }
 
-        .ip-box {
-            background-color: #21262d;
-            border: 1px solid #30363d;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: inline-block;
-            font-size: 0.95rem;
-            color: #8b949e;
+        /* استایل مخفی برای نام مهربد که بعد از زدن کلید M ظاهر می‌شود */
+        #secret-name {
+            display: none;
+            font-size: 3rem;
+            color: #ff7b72;
+            margin-top: 25px;
+            font-weight: bold;
+            animation: fadeInScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            text-shadow: 0 0 15px rgba(255, 123, 114, 0.4);
         }
 
-        .ip-value {
-            font-family: monospace;
-            color: #79c0ff;
-            font-weight: bold;
-            margin-right: 5px;
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -86,31 +92,23 @@
         <h1>آوا سنتر</h1>
         <p>وب‌سایت در حال حاضر در دست تعمیر و توسعه است. به‌زودی با امکانات جدید بازمی‌گردیم!</p>
         
-        <div class="ip-box">
-            <span>آی‌پی شما:</span>
-            <span id="user-ip" class="ip-value">در حال دریافت...</span>
-        </div>
+        <div id="secret-name">مهربد❤️</div>
     </div>
 
     <script>
-        // اسکریپت دریافت آی‌پی کاربر با استفاده از API رایگان ipify
-        fetch('https://api.ipify.org?format=json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('شبکه با خطا مواجه شد');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // نمایش آی‌پی روی صفحه
-                document.getElementById('user-ip').innerText = data.ip;
-                // چاپ آی‌پی در کنسول مرورگر
-                console.log("آی‌پی واقعی کاربر:", data.ip);
-            })
-            .catch(error => {
-                document.getElementById('user-ip').innerText = "ناموفق";
-                console.error("خطا در دریافت آی‌پی:", error);
-            });
+        // گوش دادن به کلیدهای کیبورد کاربر
+        document.addEventListener('keydown', function(event) {
+            # بررسی اینکه آیا کلید فشرده شده m یا M است
+            if (event.key === 'm' || event.key === 'M') {
+                const secretDiv = document.getElementById('secret-name');
+                
+                // آشکار کردن متن با افکت انیمیشن
+                secretDiv.style.display = 'block';
+                
+                // یک افکت کوچک برای تغییر رنگ حاشیه باکس اصلی هنگام زدن کلید
+                document.querySelector('.container').style.borderColor = '#ff7b72';
+            }
+        });
     </script>
 
 </body>
