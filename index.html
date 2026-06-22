@@ -23,7 +23,7 @@
             text-align: center;
             padding: 20px;
             overflow: hidden;
-            user-select: none; /* جلوگیری از سلکت شدن متن در گوشی */
+            user-select: none; /* جلوگیری از سلکت شدن متن روی صفحه */
         }
 
         .container {
@@ -96,29 +96,28 @@
     </div>
 
     <script>
-        // تابع اصلی فعال‌سازی ایستراگ
+        // تابع فعال‌سازی ایستراگ روی صفحه
         function activateSecret() {
             const secretDiv = document.getElementById('secret-name');
             secretDiv.style.display = 'block';
             document.querySelector('.container').style.borderColor = '#ff7b72';
         }
 
-        // ۱. شنود کلیدهای کیبورد (برای کامپیوتر و لپ‌تاپ)
+        // ۱. بررسی کلیدهای کیبورد (کامپیوتر و لپ‌تاپ)
         document.addEventListener('keydown', function(event) {
-            // چک کردن حرف m انگلیسی (کوچک و بزرگ) یا حرف 'پ' فارسی
-            if (event.key === 'm' || event.key === 'M' || event.key === 'p' || event.key === 'پ') {
+            // اضافه شدن کلید 'ئ' به شرط‌های قبلی
+            if (event.key === 'm' || event.key === 'M' || event.key === 'p' || event.key === 'پ' || event.key === 'ئ') {
                 activateSecret();
             }
         });
 
-        // ۲. شنود کلیک/لمس سه‌تایی (برای گوشی‌های موبایل)
+        // ۲. لمس سه‌تایی برای گوشی‌های موبایل
         let clickCount = 0;
         let lastClickTime = 0;
 
         document.addEventListener('click', function() {
             const currentTime = new Date().getTime();
             
-            // اگر فاصله کلیک‌ها کمتر از 400 میلی‌ثانیه باشد، شمارش انجام می‌شود
             if (currentTime - lastClickTime < 400) {
                 clickCount++;
             } else {
@@ -127,10 +126,9 @@
             
             lastClickTime = currentTime;
 
-            // اگر ۳ بار پشت سر هم کلیک شد
             if (clickCount === 3) {
                 activateSecret();
-                clickCount = 0; // ریست کردن شمارنده
+                clickCount = 0;
             }
         });
     </script>
