@@ -23,6 +23,7 @@
             text-align: center;
             padding: 20px;
             overflow: hidden;
+            user-select: none; /* جلوگیری از سلکت شدن متن در گوشی */
         }
 
         .container {
@@ -62,7 +63,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* استایل مخفی برای نام مهربد که بعد از زدن کلید M ظاهر می‌شود */
         #secret-name {
             display: none;
             font-size: 3rem;
@@ -96,17 +96,41 @@
     </div>
 
     <script>
-        // گوش دادن به کلیدهای کیبورد کاربر
+        // تابع اصلی فعال‌سازی ایستراگ
+        function activateSecret() {
+            const secretDiv = document.getElementById('secret-name');
+            secretDiv.style.display = 'block';
+            document.querySelector('.container').style.borderColor = '#ff7b72';
+        }
+
+        // ۱. شنود کلیدهای کیبورد (برای کامپیوتر و لپ‌تاپ)
         document.addEventListener('keydown', function(event) {
-            # بررسی اینکه آیا کلید فشرده شده m یا M است
-            if (event.key === 'm' || event.key === 'M') {
-                const secretDiv = document.getElementById('secret-name');
-                
-                // آشکار کردن متن با افکت انیمیشن
-                secretDiv.style.display = 'block';
-                
-                // یک افکت کوچک برای تغییر رنگ حاشیه باکس اصلی هنگام زدن کلید
-                document.querySelector('.container').style.borderColor = '#ff7b72';
+            // چک کردن حرف m انگلیسی (کوچک و بزرگ) یا حرف 'پ' فارسی
+            if (event.key === 'm' || event.key === 'M' || event.key === 'p' || event.key === 'پ') {
+                activateSecret();
+            }
+        });
+
+        // ۲. شنود کلیک/لمس سه‌تایی (برای گوشی‌های موبایل)
+        let clickCount = 0;
+        let lastClickTime = 0;
+
+        document.addEventListener('click', function() {
+            const currentTime = new Date().getTime();
+            
+            // اگر فاصله کلیک‌ها کمتر از 400 میلی‌ثانیه باشد، شمارش انجام می‌شود
+            if (currentTime - lastClickTime < 400) {
+                clickCount++;
+            } else {
+                clickCount = 1;
+            }
+            
+            lastClickTime = currentTime;
+
+            // اگر ۳ بار پشت سر هم کلیک شد
+            if (clickCount === 3) {
+                activateSecret();
+                clickCount = 0; // ریست کردن شمارنده
             }
         });
     </script>
