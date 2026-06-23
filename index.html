@@ -3,135 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آوا سنتر | در حال توسعه</title>
+    <title>تبدیل‌کننده کانفیگ VLESS</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary: #4a6cf7;
+            --text-color: #333;
         }
-
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
-            overflow: hidden;
-            user-select: none; /* جلوگیری از سلکت شدن متن روی صفحه */
+            margin: 0;
         }
-
         .container {
-            max-width: 600px;
-            padding: 40px;
-            background: #161b22;
-            border: 1px solid #30363d;
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-
-        h1 {
-            color: #58a6ff;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
         }
-
-        p {
-            color: #8b949e;
-            font-size: 1.1rem;
-            line-height: 1.6;
+        .form-group {
+            margin-bottom: 20px;
         }
-
-        .loader {
-            border: 4px solid #21262d;
-            border-top: 4px solid #58a6ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 30px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #secret-name {
-            display: none;
-            font-size: 3rem;
-            color: #ff7b72;
-            margin-top: 25px;
+        label {
+            display: block;
             font-weight: bold;
-            animation: fadeInScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            text-shadow: 0 0 15px rgba(255, 123, 114, 0.4);
+            margin-bottom: 8px;
+            font-size: 14px;
         }
-
-        @keyframes fadeInScale {
-            0% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 13px;
+            background-color: #fafafa;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #3a5bd9;
+        }
+        .output-container {
+            margin-top: 25px;
+            display: none;
+        }
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 12px;
+            background-color: #2ecc71;
+        }
+        .copy-btn:hover {
+            background-color: #27ae60;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="loader"></div>
-        <h1>آوا سنتر</h1>
-        <p>وب‌سایت در حال حاضر در دست تعمیر و توسعه است. به‌زودی با امکانات جدید بازمی‌گردیم!</p>
-        
-        <div id="secret-name">مهربد❤️</div>
+<div class="container">
+    <h2>ساخت گروهی کانفیگ VLESS با آی‌پی تمیز</h2>
+    
+    <div class="form-group">
+        <label for="vlessConfig">کانفیگ VLESS اصلی را وارد کنید:</label>
+        <input type="text" id="vlessConfig" placeholder="vless://...">
     </div>
 
-    <script>
-        // تابع فعال‌سازی ایستراگ روی صفحه
-        function activateSecret() {
-            const secretDiv = document.getElementById('secret-name');
-            secretDiv.style.display = 'block';
-            document.querySelector('.container').style.borderColor = '#ff7b72';
+    <div class="form-group">
+        <label for="scannerResult">خروجی اسکنر (جدول آی‌پي‌ها) را کپی و اینجا پیست کنید:</label>
+        <textarea id="scannerResult" rows="8" placeholder="IP Address     Sent Received Loss-Rate...&#10;104.19.81.218    4      4      0.00..."></textarea>
+    </div>
+
+    <button onclick="generateConfigs()">تولید کانفیگ‌ها</button>
+
+    <div class="output-container" id="outputContainer">
+        <div class="output-header">
+            <label>کانفیگ‌های نهایی تولید شده:</label>
+            <button class="copy-btn" onclick="copyAll()">کپی همه</button>
+        </div>
+        <textarea id="outputResult" rows="10" readonly></textarea>
+    </div>
+</div>
+
+<script>
+function generateConfigs() {
+    const configInput = document.getElementById('vlessConfig').value.trim();
+    const scannerInput = document.getElementById('scannerResult').value.trim();
+    const outputContainer = document.getElementById('outputContainer');
+    const outputResult = document.getElementById('outputResult');
+
+    if (!configInput || !scannerInput) {
+        alert('لطفاً هم کانفیگ و هم خروجی اسکنر را وارد کنید.');
+        return;
+    }
+
+    try {
+        // ۱. پیدا کردن بخش آی‌پی و پورت قدیمی از داخل کانفیگ (معادل تکه کدهای split پایتون)
+        const oldIpPort = configInput.split('@')[1].split('?')[0];
+
+        // ۲. جدا کردن خطوط ورودی اسکنر
+        const lines = scannerInput.split('\n');
+        let finalConfigs = [];
+
+        for (let line of lines) {
+            let cleanLine = line.trim();
+            
+            // رد کردن خطوط خالی یا تیتراژ جدول
+            if (!cleanLine || cleanLine.startsWith("IP Address")) continue;
+
+            // جدا کردن آی‌پی بر اساس فاصله‌های خالی (ستون اول)
+            let ip = cleanLine.split(/\s+/)[0]; 
+
+            // درست کردن پورت (اگر کاربر پورت نزده بود، پیش‌فرض ۴۴۳ بگذارد)
+            let newIpPort = ip;
+            if (!ip.includes(':')) {
+                newIpPort = `${ip}:443`;
+            }
+
+            // جایگزین کردن آی‌پی جدید به جای قدیمی (اصلاح باگ متد replace پایتون شما)
+            let newConfig = configInput.replace(oldIpPort, newIpPort);
+            finalConfigs.push(newConfig);
         }
 
-        // ۱. بررسی کلیدهای کیبورد (کامپیوتر و لپ‌تاپ)
-        document.addEventListener('keydown', function(event) {
-            // اضافه شدن کلید 'ئ' به شرط‌های قبلی
-            if (event.key === 'm' || event.key === 'M' || event.key === 'p' || event.key === 'پ' || event.key === 'ئ') {
-                activateSecret();
-            }
-        });
+        // نمایش نتایج در باکس خروجی
+        if (finalConfigs.length > 0) {
+            outputResult.value = finalConfigs.join('\n\n');
+            outputContainer.style.display = 'block';
+        } else {
+            alert('آی‌پی معتبری در متن اسکنر پیدا نشد.');
+        }
 
-        // ۲. لمس سه‌تایی برای گوشی‌های موبایل
-        let clickCount = 0;
-        let lastClickTime = 0;
+    } catch (error) {
+        alert('خطا در پردازش اطلاعات! مطمئن شوید فرمت کانفیگ VLESS درست است.');
+        console.error(error);
+    }
+}
 
-        document.addEventListener('click', function() {
-            const currentTime = new Date().getTime();
-            
-            if (currentTime - lastClickTime < 400) {
-                clickCount++;
-            } else {
-                clickCount = 1;
-            }
-            
-            lastClickTime = currentTime;
-
-            if (clickCount === 3) {
-                activateSecret();
-                clickCount = 0;
-            }
-        });
-    </script>
+function copyAll() {
+    const outputResult = document.getElementById('outputResult');
+    outputResult.select();
+    document.execCommand('copy');
+    alert('تمام کانفیگ‌ها در حافظه کپی شدند!');
+}
+</script>
 
 </body>
 </html>
