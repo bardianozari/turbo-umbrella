@@ -3,179 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تبدیل‌کننده کانفیگ VLESS</title>
+    <title>مترونوم دیجیتال پیشرفته استودیویی</title>
     <style>
-        :root {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --primary: #4a6cf7;
-            --text-color: #333;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #121216;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px 0;
         }
         .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: var(--card-bg);
+            background-color: #1c1c24;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        h2 {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            width: 90%;
+            max-width: 550px;
             text-align: center;
-            margin-bottom: 25px;
-            color: #2c3e50;
+            border: 1px solid #2d2d3d;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
+        .bpm-display {
+            font-size: 5rem;
             font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
+            color: #00ffcc;
+            margin: 10px 0;
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
         }
-        input[type="text"], textarea {
+        input[type="range"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-family: monospace;
-            font-size: 13px;
-            background-color: #fafafa;
+            margin: 15px 0;
+            accent-color: #00ffcc;
         }
-        textarea {
-            resize: vertical;
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            text-align: right;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .btn-container {
+            margin: 25px 0;
         }
         button {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary);
-            color: white;
+            background-color: #00ffcc;
+            color: #121216;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 14px 30px;
+            font-size: 1.2rem;
             font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: 0.2s;
+            width: 100%;
         }
-        button:hover {
-            background-color: #3a5bd9;
+        button:hover { background-color: #33ffdd; box-shadow: 0 0 10px rgba(0, 255, 204, 0.4); }
+        button.stop { background-color: #ff3366; color: #fff; }
+        button.stop:hover { background-color: #ff5588; box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); }
+        
+        select, input[type="text"], input[type="number"] {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background-color: #252530;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
         }
-        .output-container {
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #00ffcc;
+        }
+        
+        .save-section {
+            margin: 25px 0;
+            padding-top: 15px;
+            border-top: 1px dashed #333;
+        }
+        .save-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .save-form input[type="text"] { flex: 1; }
+        .save-form button { width: auto; padding: 10px 20px; }
+
+        .profile-list {
             margin-top: 25px;
-            display: none;
+            text-align: right;
+            border-top: 1px solid #333;
+            padding-top: 20px;
         }
-        .output-header {
+        .profile-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            background: #22222d;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #00ffcc;
         }
-        .copy-btn {
-            width: auto;
+        .profile-details {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 3px;
+        }
+        .profile-actions button {
             padding: 6px 12px;
-            font-size: 12px;
-            background-color: #2ecc71;
+            font-size: 0.85rem;
+            width: auto;
+            display: inline-block;
         }
-        .copy-btn:hover {
-            background-color: #27ae60;
-        }
+        .delete-btn { background-color: #ff3366; color: white; margin-right: 5px;}
+        .delete-btn:hover { background-color: #ff5588; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>ساخت گروهی کانفیگ VLESS با آی‌پی تمیز</h2>
+    <h2>مترونوم استودیویی با ریتم و فرکانس دلخواه</h2>
     
-    <div class="form-group">
-        <label for="vlessConfig">کانفیگ VLESS اصلی را وارد کنید:</label>
-        <input type="text" id="vlessConfig" placeholder="vless://...">
-    </div>
-
-    <div class="form-group">
-        <label for="scannerResult">خروجی اسکنر (جدول آی‌پي‌ها) را کپی و اینجا پیست کنید:</label>
-        <textarea id="scannerResult" rows="8" placeholder="IP Address     Sent Received Loss-Rate...&#10;104.19.81.218    4      4      0.00..."></textarea>
-    </div>
-
-    <button onclick="generateConfigs()">تولید کانفیگ‌ها</button>
-
-    <div class="output-container" id="outputContainer">
-        <div class="output-header">
-            <label>کانفیگ‌های نهایی تولید شده:</label>
-            <button class="copy-btn" onclick="copyAll()">کپی همه</button>
+    <div class="bpm-display"><span id="bpmValue">120</span> <span style="font-size: 1.5rem;">BPM</span></div>
+    <input type="range" id="bpmSlider" min="40" max="250" value="120">
+    
+    <div class="control-grid">
+        <div class="control-group">
+            <label>تعداد ضرب در میزان (۱ تا ۱۶)</label>
+            <input type="number" id="beatsPerMeasure" min="1" max="16" value="4">
         </div>
-        <textarea id="outputResult" rows="10" readonly></textarea>
+        
+        <div class="control-group">
+            <label>تقسیمات زمانی (کشش نت)</label>
+            <select id="subdivision">
+                <option value="1" selected>نت سیاه (Quarter)</option>
+                <option value="2">نت چنگ (Eighth)</option>
+                <option value="4">نت دولاچنگ (Sixteenth)</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>صدای ضرب اول (سر میزان)</label>
+            <select id="firstBeatSound"></select>
+        </div>
+
+        <div class="control-group">
+            <label>صدای ضرب‌های معمولی</label>
+            <select id="normalBeatSound"></select>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button id="startStopBtn">شروع مترونوم</button>
+    </div>
+
+    <div class="save-section">
+        <h3 style="font-size: 1.1rem; text-align: right; margin: 0; color: #888;">ذخیره تنظیمات برای آهنگ جدید</h3>
+        <div class="save-form">
+            <input type="text" id="songName" placeholder="نام آهنگ را بنویسید...">
+            <button id="saveBtn">ذخیره</button>
+        </div>
+    </div>
+
+    <div class="profile-list">
+        <h3>پروفایل‌های شما</h3>
+        <div id="profilesContainer"></div>
     </div>
 </div>
 
 <script>
-function generateConfigs() {
-    const configInput = document.getElementById('vlessConfig').value.trim();
-    const scannerInput = document.getElementById('scannerResult').value.trim();
-    const outputContainer = document.getElementById('outputContainer');
-    const outputResult = document.getElementById('outputResult');
-
-    if (!configInput || !scannerInput) {
-        alert('لطفاً هم کانفیگ و هم خروجی اسکنر را وارد کنید.');
-        return;
+    let audioCtx = null;
+    
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
     }
 
-    try {
-        // ۱. پیدا کردن بخش آی‌پی و پورت قدیمی از داخل کانفیگ (معادل تکه کدهای split پایتون)
-        const oldIpPort = configInput.split('@')[1].split('?')[0];
+    document.addEventListener('click', initAudio, { once: false });
 
-        // ۲. جدا کردن خطوط ورودی اسکنر
-        const lines = scannerInput.split('\n');
-        let finalConfigs = [];
+    let isPlaying = false;
+    let bpm = 120;
+    let beatsPerMeasure = 4;
+    let subdivision = 1; 
+    
+    let currentSubdivisionBeat = 0; 
+    let timerId = null;
 
-        for (let line of lines) {
-            let cleanLine = line.trim();
-            
-            // رد کردن خطوط خالی یا تیتراژ جدول
-            if (!cleanLine || cleanLine.startsWith("IP Address")) continue;
+    // تعریف ۱۵ صدای دیجیتال با فرکانس‌های دقیق و استاندارد
+    const digitalSounds = [
+        { id: 'f2000', name: 'دیجیتال فوق تیز (2000 Hz)', freq: 2000 },
+        { id: 'f1800', name: 'دیجیتال تیز مایکرو (1800 Hz)', freq: 1800 },
+        { id: 'f1600', name: 'مایکروکلاو اصلی (1600 Hz)', freq: 1600 },
+        { id: 'f1500', name: 'پالس کلیک استودیو (1500 Hz)', freq: 1500 },
+        { id: 'f1300', name: 'دیجیتال استاندارد ۱ (1300 Hz)', freq: 1300 },
+        { id: 'f1100', name: 'دیجیتال استاندارد ۲ (1100 Hz)', freq: 1100 },
+        { id: 'f1000', name: 'بیپ ترنسپورت (1000 Hz)', freq: 1000 },
+        { id: 'f900',  name: 'فرکانس میانی ۱ (900 Hz)', freq: 900 },
+        { id: 'f800',  name: 'فرکانس میانی ۲ (800 Hz)', freq: 800 },
+        { id: 'f700',  name: 'سیگنال پاپ (700 Hz)', freq: 700 },
+        { id: 'f600',  name: 'پالس کلاسیک نرم (600 Hz)', freq: 600 },
+        { id: 'f500',  name: 'آلارم دیجیتال ملو (500 Hz)', freq: 500 },
+        { id: 'f400',  name: 'بیس دیجیتیک کلیک (400 Hz)', freq: 400 },
+        { id: 'f300',  name: 'ساب بیس کلیک (300 Hz)', freq: 300 },
+        { id: 'f200',  name: 'فرکانس فوق بم کلاو (200 Hz)', freq: 200 }
+    ];
 
-            // جدا کردن آی‌پی بر اساس فاصله‌های خالی (ستون اول)
-            let ip = cleanLine.split(/\s+/)[0]; 
+    const bpmSlider = document.getElementById('bpmSlider');
+    const bpmValue = document.getElementById('bpmValue');
+    const beatsInput = document.getElementById('beatsPerMeasure');
+    const subdivisionSelect = document.getElementById('subdivision');
+    const firstBeatSelect = document.getElementById('firstBeatSound');
+    const normalBeatSelect = document.getElementById('normalBeatSound');
+    const startStopBtn = document.getElementById('startStopBtn');
+    const songNameInput = document.getElementById('songName');
+    const saveBtn = document.getElementById('saveBtn');
+    const profilesContainer = document.getElementById('profilesContainer');
 
-            // درست کردن پورت (اگر کاربر پورت نزده بود، پیش‌فرض ۴۴۳ بگذارد)
-            let newIpPort = ip;
-            if (!ip.includes(':')) {
-                newIpPort = `${ip}:443`;
-            }
+    // پر کردن آپشن‌های صدا به صورت خودکار
+    digitalSounds.forEach((sound, index) => {
+        const opt1 = new Option(sound.name, sound.freq);
+        const opt2 = new Option(sound.name, sound.freq);
+        if (index === 3) opt1.selected = true; // پیش‌فرض ضرب اول (1500Hz)
+        if (index === 8) opt2.selected = true; // پیش‌فرض ضرب معمولی (800Hz)
+        firstBeatSelect.add(opt1);
+        normalBeatSelect.add(opt2);
+    });
 
-            // جایگزین کردن آی‌پی جدید به جای قدیمی (اصلاح باگ متد replace پایتون شما)
-            let newConfig = configInput.replace(oldIpPort, newIpPort);
-            finalConfigs.push(newConfig);
-        }
+    bpmSlider.addEventListener('input', (e) => {
+        bpm = e.target.value;
+        bpmValue.textContent = bpm;
+        if (isPlaying) { stopMetronome(); startMetronome(); }
+    });
 
-        // نمایش نتایج در باکس خروجی
-        if (finalConfigs.length > 0) {
-            outputResult.value = finalConfigs.join('\n\n');
-            outputContainer.style.display = 'block';
+    beatsInput.addEventListener('input', (e) => {
+        let val = parseInt(e.target.value);
+        if (isNaN(val) || val < 1) val = 1;
+        if (val > 16) val = 16;
+        beatsPerMeasure = val;
+        resetBeats();
+    });
+    
+    subdivisionSelect.addEventListener('change', (e) => { subdivision = parseInt(e.target.value); resetBeats(); });
+    firstBeatSelect.addEventListener('change', () => resetBeats());
+    normalBeatSelect.addEventListener('change', () => resetBeats());
+
+    function resetBeats() {
+        currentSubdivisionBeat = 0;
+        if (isPlaying) { stopMetronome(); startMetronome(); }
+    }
+
+    function playDigitalClick(frequency, duration, volume) {
+        initAudio();
+        if (!audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+        gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playTick() {
+        const isFirstBeatOfMeasure = (currentSubdivisionBeat === 0);
+        const isMainBeat = (currentSubdivisionBeat % subdivision === 0);
+
+        let freq, duration, vol;
+
+        if (isFirstBeatOfMeasure) {
+            freq = parseInt(firstBeatSelect.value);
+            duration = 0.05;
+            vol = 0.8;
+        } else if (isMainBeat) {
+            freq = parseInt(normalBeatSelect.value);
+            duration = 0.03;
+            vol = 0.5;
         } else {
-            alert('آی‌پی معتبری در متن اسکنر پیدا نشد.');
+            // نت‌های فرعی چنگ و دولاچنگ همیشه یک لایه زیرین ضعیف تشکیل می‌دهند
+            freq = parseInt(normalBeatSelect.value) * 0.6;
+            duration = 0.015;
+            vol = 0.15;
         }
 
-    } catch (error) {
-        alert('خطا در پردازش اطلاعات! مطمئن شوید فرمت کانفیگ VLESS درست است.');
-        console.error(error);
+        playDigitalClick(freq, duration, vol);
+
+        const totalSubdivisionsPerMeasure = beatsPerMeasure * subdivision;
+        currentSubdivisionBeat = (currentSubdivisionBeat + 1) % totalSubdivisionsPerMeasure;
     }
-}
 
-function copyAll() {
-    const outputResult = document.getElementById('outputResult');
-    outputResult.select();
-    document.execCommand('copy');
-    alert('تمام کانفیگ‌ها در حافظه کپی شدند!');
-}
+    function startMetronome() {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        
+        const interval = (60 / bpm / subdivision) * 1000;
+        timerId = setInterval(playTick, interval);
+        startStopBtn.textContent = 'توقف مترونوم';
+        startStopBtn.classList.add('stop');
+        isPlaying = true;
+    }
+
+    function stopMetronome() {
+        clearInterval(timerId);
+        startStopBtn.textContent = 'شروع مترونوم';
+        startStopBtn.classList.remove('stop');
+        isPlaying = false;
+        currentSubdivisionBeat = 0;
+    }
+
+    startStopBtn.addEventListener('click', () => {
+        if (isPlaying) stopMetronome(); else startMetronome();
+    });
+
+    // سیستم ذخیره پروفایل
+    function getProfiles() {
+        const profiles = localStorage.getItem('dynamic_metro_profiles');
+        return profiles ? JSON.parse(profiles) : [];
+    }
+
+    function saveProfile() {
+        const name = songNameInput.value.trim();
+        if (!name) { alert('لطفاً نام آهنگ را وارد کنید'); return; }
+        
+        const profiles = getProfiles();
+        const newProfile = { 
+            id: Date.now(), 
+            name, 
+            bpm, 
+            beats: beatsPerMeasure, 
+            subdivision,
+            firstFreq: firstBeatSelect.value,
+            normalFreq: normalBeatSelect.value
+        };
+        profiles.push(newProfile);
+        localStorage.setItem('dynamic_metro_profiles', JSON.stringify(profiles));
+        
+        songNameInput.value = '';
+        renderProfiles();
+    }
+
+    function deleteProfile(id) {
+        let profiles = getProfiles();
+        profiles = profiles.filter(p => p.id !== id);
+        localStorage.setItem('dynamic_metro_profiles', JSON.stringify(profiles));
+        renderProfiles();
+    }
+
+    function loadProfile(bpmToLoad, beatsToLoad, subToLoad, firstFreq, normalFreq) {
+        bpm = bpmToLoad;
+        beatsPerMeasure = beatsToLoad;
+        subdivision = subToLoad;
+        
+        bpmSlider.value = bpm;
+        bpmValue.textContent = bpm;
+        beatsInput.value = beatsToLoad;
+        subdivisionSelect.value = subToLoad;
+        if(firstFreq) firstBeatSelect.value = firstFreq;
+        if(normalFreq) normalBeatSelect.value = normalFreq;
+        
+        resetBeats();
+    }
+
+    function getSubdivisionText(val) {
+        if(val === 1) return 'نت سیاه';
+        if(val === 2) return 'چنگ';
+        if(val === 4) return 'دولاچنگ';
+        return 'سیاه';
+    }
+
+    function renderProfiles() {
+        profilesContainer.innerHTML = '';
+        const profiles = getProfiles();
+        if(profiles.length === 0) {
+            profilesContainer.innerHTML = '<p style="color:#666; font-size:0.9rem;">هیچ آهنگی ذخیره نشده است.</p>';
+            return;
+        }
+        profiles.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'profile-item';
+            item.innerHTML = `
+                <div>
+                    <strong style="color:#00ffcc;">${p.name}</strong> 
+                    <div class="profile-details">
+                        تمپو: ${p.bpm} BPM | کسر میزان: ${p.beats} ضربی | نت: ${getSubdivisionText(p.subdivision)}
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button onclick="loadProfile(${p.bpm}, ${p.beats}, ${p.subdivision}, ${p.firstFreq || 1500}, ${p.normalFreq || 800})">اعمال</button>
+                    <button class="delete-btn" onclick="deleteProfile(${p.id})">حذف</button>
+                </div>
+            `;
+            profilesContainer.appendChild(item);
+        });
+    }
+
+    saveBtn.addEventListener('click', saveProfile);
+    renderProfiles();
 </script>
-
 </body>
 </html>
